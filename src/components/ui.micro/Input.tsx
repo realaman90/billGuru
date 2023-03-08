@@ -4,12 +4,15 @@ interface InputTypeProps{
   input: any,
   variant:string,
   size:string,
-  
-  onChange:Function
+  sx?:any,  
+  onChange:Function,
+  error?:Boolean,
+  helperText?:string,
+  onFocus?:Function,
 
 }
 export default function Input({ input, ...rest }: InputTypeProps) {
   return (
-    <TextField {...input} {...rest} inputProps={{ fontFamily: 'monospace' }} />
+    <TextField {...input} {...rest}  />
   );
 }

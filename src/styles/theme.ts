@@ -32,7 +32,8 @@ components: {
   MuiTextField:{
     styleOverrides:{
       root:{
-        fontFamily:'Montserrat, sans-serif'
+        fontFamily:'Montserrat, sans-serif',
+        cursor:'pointer'
       },
       
 

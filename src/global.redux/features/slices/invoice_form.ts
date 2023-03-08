@@ -5,14 +5,14 @@ import type { RootState } from '../..';
 import dayjs from 'dayjs';
 import { Client,Sender, Item, InvoiceForm, Details} from '../../../interfaces/index';
 
-const InvoiceForm = {
+const Invoice = {
   id: '',
   details:{
     invoiceName: '',
   invoiceNumber: '',
   logo: '',
-  invoiceDate: dayjs().format('MM-DD-YYYY'),
-  dueDate: dayjs().format('MM-DD-YYYY'),
+  invoiceDate: dayjs(Date.now()).format(),
+  dueDate: "",
   },
   client: {
     id: '',
@@ -67,7 +67,7 @@ const InvoiceForm = {
   attachments: '',
 };
 
-const initialState= InvoiceForm;
+const initialState= Invoice;
 
 export const invoiceFormSlice = createSlice({
   name: 'invoiceForm',
@@ -81,21 +81,12 @@ export const invoiceFormSlice = createSlice({
       state.details.dueDate = dueDate;
     },
     updateClient: (state, action: PayloadAction<Client>) => {
-      const { id, name, email, address, pinCode, phone, businessNumber, vat } =
-        action.payload;
-      state.client.id = id;
-      state.client.name = name;
-      state.client.email = email;
-      state.client.address = address;
-      state.client.pinCode = pinCode;
-      state.client.phone = phone;
-      state.client.businessNumber = businessNumber;
-      state.client.vat = vat;
+      state.client = action.payload;
     },
     updateSender: (state, action: PayloadAction<Sender>) => {
       const { id, name, email, address, pinCode, phone, businessNumber, vat } =
         action.payload;
-      state.sender.id = id;
+   
       state.sender.name = name;
       state.sender.email = email;
       state.sender.address = address;

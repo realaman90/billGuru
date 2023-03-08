@@ -1,11 +1,11 @@
 import { Client, Sender, InvoiceForm, Item } from '../../../interfaces/index';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// add process.env.NODE_ENV === 'production' ? 'https://api.example.com' : 'http://localhost:3000' to baseUrl
+// add process.env.NODE_ENV === 'production' ? 'https://api.example.com' : 'http://localhost:3001' to baseUrl
 
  const invoiceApi = createApi({
     reducerPath: 'invoiceApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001' }),
     endpoints: (builder) => ({
         getInvoices: builder.query({
             query: () => '/invoices',
@@ -39,7 +39,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const clientApi = createApi({
     reducerPath: 'clientApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001' }),
     endpoints: (builder) => ({
         getClients: builder.query({
             query: () => '/clients',
@@ -71,7 +71,7 @@ const clientApi = createApi({
 });
 const senderApi = createApi({
     reducerPath: 'senderApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001' }),
     endpoints: (builder) => ({
         getSenders: builder.query({
             query: () => '/senders',
@@ -103,7 +103,7 @@ const senderApi = createApi({
 });
 const itemsApi = createApi({
     reducerPath: 'itemsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001' }),
     endpoints: (builder) => ({
         getItems: builder.query({
             query: () => '/items',

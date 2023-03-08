@@ -3,7 +3,7 @@ import { Box, Divider, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
 
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch } from '@/global.redux/hooks';
 
 import getLocaleDateString from '../../utils/dateformat';
@@ -46,14 +46,16 @@ export default function InvoiceDetails({ invoice }: InvoiceProps) {
     dispatch(updateDetails(details));
   };
   // for date
-  const handleDate = (newValue: Date | null) => {
+  const handleDate = (newValue: Dayjs | null) => {
     if (newValue) {
+     
       const date = dayjs(newValue).format();
+      console.log(date)
       dispatch(updateDetails({ ...details, invoiceDate: date }));
     }
   };
 
-  const handleDueDate = (newValue: Date | null) => {
+  const handleDueDate = (newValue: Dayjs | null) => {
     if (newValue) {
       const date = dayjs(newValue).format();
       dispatch(updateDetails({ ...details, dueDate: date }));
@@ -142,7 +144,8 @@ export default function InvoiceDetails({ invoice }: InvoiceProps) {
               size="small"
               onChange={handleInvoiceNameChange}
             />
-            <DatePickerComponent details={details} handleDate={handleDate} handleDueDate={handleDueDate} />
+            <DatePickerComponent size="small" className='InvoiceDate' currValue={details.invoiceDate} handleDate={handleDate} format={'DD/MM/YYYY'} />
+            <DatePickerComponent size="small" className='invoiceDueDate' currValue={details.dueDate} handleDate={handleDueDate} format={'DD/MM/YYYY'} />
           </Box>
         </Grid>
       </Grid>

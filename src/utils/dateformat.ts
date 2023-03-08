@@ -1,4 +1,8 @@
-export default function getLocaleDateString():string {
+import { useEffect } from "react";
+
+export default function getLocaleDateString():string |undefined {
+  if(window !== undefined)
+  {
     const formats: {[key:string]:string} = {
       "af-ZA": "YYYY/MM/DD",
       "am-ET": "DD/M/YYYY",
@@ -212,5 +216,8 @@ export default function getLocaleDateString():string {
       "zu-ZA": "YYYY/MM/DD",
     };
   
-    return formats[navigator.language] || "DD/MM/YYYY";
+    return formats[navigator.language] || "DD/MM/YYYY";}
+    else{
+      return "DD/MM/YYYY"
+    }
   }
