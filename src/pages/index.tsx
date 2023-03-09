@@ -8,6 +8,7 @@ import DatePickerComponent from '@/components/ui.micro/DatePicker'
 
 import InvoiceClient from '@/components/ui/InvoiceClient'
 import { useGetClientsQuery } from '@/global.redux'
+import InvoiceSender from '@/components/ui/InvoiceSender'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +22,7 @@ export default function Home() {
     <div></div>
      <InvoiceDetails invoice={invoice}/>
     <InvoiceClient invoice={invoice} />
+    <InvoiceSender invoice={invoice} />
      
     </>
   )
