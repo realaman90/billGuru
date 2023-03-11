@@ -18,7 +18,8 @@ import {
     invoiceApi,
     clientApi,
     senderApi,
-    itemsApi
+    itemsApi,
+    hsn_codesapi
 } from './features/api/invoiceApis'
 
 
@@ -30,6 +31,7 @@ import {
         [clientApi.reducerPath]: clientApi.reducer,
         [senderApi.reducerPath]: senderApi.reducer,
         [itemsApi.reducerPath]: itemsApi.reducer,
+        [hsn_codesapi.reducerPath]:hsn_codesapi.reducer,
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat(
@@ -37,6 +39,7 @@ import {
             clientApi.middleware,
             senderApi.middleware,
             itemsApi.middleware,
+            hsn_codesapi.middleware,
         );
 
 
@@ -83,6 +86,9 @@ export {
     useCreateItemMutation,
     useUpdateItemMutation,
     useDeleteItemMutation,
+    //
+    useGetHsn_codesQuery,
+    useGetHsn_codeQuery,
     
 
 } from './features/api/invoiceApis';

@@ -3,16 +3,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../..';
 import dayjs from 'dayjs';
-import { Client,Sender, Item, InvoiceForm, Details} from '../../../interfaces/index';
+import {
+  Client,
+  Sender,
+  Item,
+  InvoiceForm,
+  Details,
+} from '../../../interfaces/index';
 
 const Invoice = {
   id: '',
-  details:{
+  details: {
     invoiceName: '',
-  invoiceNumber: '',
-  logo: '',
-  invoiceDate: dayjs(Date.now()).format(),
-  dueDate: "",
+    invoiceNumber: '',
+    logo: '',
+    invoiceDate: dayjs(Date.now()).format(),
+    dueDate: '',
   },
   client: {
     id: '',
@@ -43,7 +49,7 @@ const Invoice = {
       amount: 0,
       rate: 0,
       discountAmount: 0,
-      itemTax: [{id:'', name: '', rate: 0, amount:0 }],
+      itemTax: {  name: '', cgst:0, sgst:0, igst:0, rate: 0, amount: 0 },
       discount: 0,
     },
   ],
@@ -51,7 +57,7 @@ const Invoice = {
   totalTax: 0,
   totalDiscount: 0,
   total: 0,
-  fee:[{name:'', amount:0, tax:0}],
+  fee: [{ name: '', amount: 0, tax: 0 }],
   payments: [
     {
       id: '',
@@ -63,11 +69,12 @@ const Invoice = {
   balanceDue: 0,
   notes: '',
   terms: '',
-  currency: '',
+  currency: '₹',
   attachments: '',
+  locale: 'en-IN',
 };
 
-const initialState= Invoice;
+const initialState = Invoice;
 
 export const invoiceFormSlice = createSlice({
   name: 'invoiceForm',
@@ -86,7 +93,7 @@ export const invoiceFormSlice = createSlice({
     updateSender: (state, action: PayloadAction<Sender>) => {
       const { id, name, email, address, pinCode, phone, businessNumber, vat } =
         action.payload;
-   
+
       state.sender.name = name;
       state.sender.email = email;
       state.sender.address = address;
@@ -101,21 +108,32 @@ export const invoiceFormSlice = createSlice({
     removeItem(state, action: PayloadAction<Item>) {
       state.items = state.items.filter((item) => item.id !== action.payload.id);
     },
-    addItemTax(state, action: PayloadAction<{ item: Item; tax: Item }>) {
+    addItemTax(
+      state,
+      action: PayloadAction<{
+        item: Item;
+        tax: {
+          id: string;
+          name: string;
+          cgst: number;
+          sgst: number;
+          igst: number;
+          rate: number;
+          amount: number;
+        };
+      }>
+    ) {
       const { item, tax } = action.payload;
       const itemIndex = state.items.findIndex((i) => i.id === item.id);
-      state.items[itemIndex].itemTax.push(tax);
+      state.items[itemIndex].itemTax = tax;
     },
-
-
-    
 
     updateItems(state, action: PayloadAction<Item[]>) {
       state.items = action.payload;
       state.subtotal =
         Math.round(
           (state.items
-            .map((item) => (item.amount))
+            .map((item) => item.amount)
             .reduce((accum, currVal) => accum + currVal, 0) +
             Number.EPSILON) *
             100
@@ -124,9 +142,7 @@ export const invoiceFormSlice = createSlice({
         Math.round(
           (state.items
             .map((item) =>
-              item.itemTax
-                .map((tax) => (tax.amount))
-                .reduce((accum, currVal) => accum + currVal, 0)
+              item.itemTax.amount
             )
             .reduce((accum, currVal) => accum + currVal, 0) +
             Number.EPSILON) *
@@ -135,7 +151,7 @@ export const invoiceFormSlice = createSlice({
       state.totalDiscount =
         Math.round(
           (state.items
-            .map((item) => (item.discountAmount))
+            .map((item) => item.discountAmount)
             .reduce((accum, currVal) => accum + currVal, 0) +
             Number.EPSILON) *
             100
@@ -149,35 +165,45 @@ export const invoiceFormSlice = createSlice({
           (state.subtotal -
             state.totalDiscount +
             state.totalTax +
-            feeArr.reduce((a:number, b:number) => a + b, 0) +
+            feeArr.reduce((a: number, b: number) => a + b, 0) +
             Number.EPSILON) *
             100
         ) / 100;
       state.balanceDue =
         state.total -
         state.payments
-          .map((payment) => (payment.amount))
+          .map((payment) => payment.amount)
           .reduce((a, b) => a + b, 0);
     },
-    addFee(state, action:PayloadAction<{name:string, amount:number, tax:number}>){
+    addFee(
+      state,
+      action: PayloadAction<{ name: string; amount: number; tax: number }>
+    ) {
       state.fee.push(action.payload);
-      const feeArr = state.fee.map(fee => {return fee.amount + fee.tax});
-            state.total = state.total + Math.round((feeArr.reduce((a,b)=> a+b,0)+ Number.EPSILON)*100)/100;
-            state.balanceDue = state.total - state.payments.map(payment=>payment.amount).reduce((a,b)=>a+b,0);
+      const feeArr = state.fee.map((fee) => {
+        return fee.amount + fee.tax;
+      });
+      state.total =
+        state.total +
+        Math.round((feeArr.reduce((a, b) => a + b, 0) + Number.EPSILON) * 100) /
+          100;
+      state.balanceDue =
+        state.total -
+        state.payments
+          .map((payment) => payment.amount)
+          .reduce((a, b) => a + b, 0);
     },
-    
-    removeFee(state,action:PayloadAction<{name:string, amount:number, tax:number}>){
-      state.fee = state.fee.filter((fee)=>fee.name !== action.payload.name)
+
+    removeFee(
+      state,
+      action: PayloadAction<{ name: string; amount: number; tax: number }>
+    ) {
+      state.fee = state.fee.filter((fee) => fee.name !== action.payload.name);
     },
     changeCurrency(state, action: PayloadAction<string>) {
       state.currency = action.payload;
-    }
-
-    
-
+    },
   },
-
-
 });
 export const {
   updateDetails,
@@ -193,4 +219,4 @@ export const {
 } = invoiceFormSlice.actions;
 export const selectInvoiceForm = (state: RootState) => state.invoiceForm;
 
-export const invoiceFormReducer = invoiceFormSlice.reducer
+export const invoiceFormReducer = invoiceFormSlice.reducer;

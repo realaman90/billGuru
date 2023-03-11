@@ -19,133 +19,197 @@
   ],
   "items": [
     {
-      "id": "121zez2",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "name": "Biking Tool",
-      "rate": 63.99,
-      "discount": 10,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "gugu",
+      "description": "hkjhk",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 1
     },
     {
-      "id": "121zez2",
-      "name": "Tire Component",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "rate": 120.99,
-      "discount": 72.99,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "gugu",
+      "description": "hkjhk",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 2
     },
     {
-      "name": "Jewelry Equipment",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "rate": 118.99,
-      "discount": 82,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "gugu",
+      "description": "hkjhk",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 3
     },
     {
-      "name": "Dining Supplies",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "id": "121zez2",
-      "rate": 85.99,
-      "discount": 59,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "gugu",
+      "description": "hkjhk",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 4
     },
     {
-      "name": "Womens Rig",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "id": "121zez2",
-      "rate": 120,
-      "discount": 72,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "gugu",
+      "description": "hkjhk",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 5
     },
     {
-      "name": "Womens Item",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "id": "121zez2",
-      "rate": 42.95,
-      "discount": 29.95,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "gugu",
+      "description": "hkjhk",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 6
     },
     {
-      "name": "Game Doodad",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "id": "121zez2",
-      "rate": 101.99,
-      "discount": 70.99,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "gugu",
+      "description": "hkjhk",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 7
     },
     {
-      "name": "Book Gadget",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "id": "121zez2",
-      "rate": 162.95,
-      "discount": 129.95,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "ds",
+      "description": "dsd",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 8
     },
     {
-      "name": "Biking Paraphernalia",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "id": "121zez2",
-      "rate": 163,
-      "discount": 114.99,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "juu",
+      "description": "kk",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 9
     },
     {
-      "name": "Bedding Widget",
-      "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-      "id": "121zez2",
-      "rate": 32.95,
-      "discount": 28.95,
-      "tax": [
-        {
-          "name": "GST",
-          "rate": 18
-        }
-      ]
+      "name": "guguxs",
+      "description": "dcsqcqs",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 10
+    },
+    {
+      "name": "rt",
+      "description": "rt",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 11
+    },
+   
+    {
+      "name": "rtr",
+      "description": "ret",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 13
+    },
+    {
+      "name": "sdsds",
+      "description": "dsd",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 14
+    },
+    {
+      "name": "dsd",
+      "description": "dsqdsq",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 15
+    },
+    {
+      "name": "sdqdqdqdq",
+      "description": "sdsqd",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 2.5,
+        "sgst": 2.5,
+        "igst": 5,
+        "name": "1234"
+      },
+      "id": 16
+    },
+    {
+      "name": "fdf",
+      "description": "dff",
+      "rate": 30,
+      "itemTax": {
+        "cgst": 9,
+        "sgst": 9,
+        "igst": 18,
+        "name": "123"
+      },
+      "id": 17
     }
   ],
   "clients": [
@@ -243,8 +307,17 @@
       "vat": "5",
       "user": "1",
       "id": 12
+    },
+    {
+      "id": 13,
+      "name": "sdsd",
+      "address": "css",
+      "email": "aman@gmail.com",
+      "businessNumber": "sdq",
+      "phone": "dssd",
+      "pinCode": "dsd",
+      "vat": "sdsd"
     }
-    
   ],
   "senders": [
     {
@@ -258,6 +331,24 @@
       "vat": "7",
       "user": "1",
       "id": 12
+    }
+  ],
+  "hsn_codes": [
+    {
+      "name": "test",
+      "code": "123",
+      "id": 1,
+      "cgst": 9,
+      "sgst": 9,
+      "igst": 18
+    },
+    {
+      "name": "test2",
+      "code": "1234",
+      "id": 2,
+      "cgst": 2.5,
+      "sgst": 2.5,
+      "igst": 5
     }
   ]
 }

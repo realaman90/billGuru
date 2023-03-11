@@ -112,7 +112,7 @@ const itemsApi = createApi({
             query: (id: string) => `/items/${id}`,
         }),
         createItem: builder.mutation({
-            query: (body: Item) => ({
+            query: (body: any) => ({
                 url: '/items',
                 method: 'POST',
                 body,
@@ -132,6 +132,21 @@ const itemsApi = createApi({
             }),
         }),
     }),
+
+})
+const hsn_codesapi = createApi({
+    reducerPath: 'hsn_codesapi',
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001' }),
+    endpoints: (builder) => ({
+        getHsn_codes: builder.query({
+            query: () => '/hsn_codes',
+        }),
+        getHsn_code: builder.query({
+            query: (id: string) => `/hsn_codes/${id}`,
+        }),
+
+    }),       
+
 
 })
 
@@ -163,12 +178,16 @@ export const {
     useUpdateItemMutation,
     useDeleteItemMutation,
 } = itemsApi;
-
+export const {
+    useGetHsn_codesQuery,
+    useGetHsn_codeQuery,
+} = hsn_codesapi
 export {
     invoiceApi,
     clientApi,
     senderApi,
-    itemsApi
+    itemsApi,
+    hsn_codesapi
 
 }
 

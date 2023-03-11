@@ -1,14 +1,15 @@
 import { TextField, TextFieldProps } from '@mui/material';
 
-interface InputTypeProps{
-  input: any,
-  variant:string,
-  size:string,
+interface InputTypeProps {
+  input?: any,
+  variant?:string,
+  size?:string,
   sx?:any,  
-  onChange:Function,
+  onChange?:Function,
   error?:Boolean,
   helperText?:string,
   onFocus?:Function,
+  params?:TextFieldProps
 
 }
 export default function Input({ input, ...rest }: InputTypeProps) {

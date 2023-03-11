@@ -18,6 +18,14 @@ export type Sender = {
   businessNumber: string;
   vat: string;
 };
+interface ItemTax  {
+  name: string;
+  cgst: number 
+  sgst: number
+  igst: number 
+  rate: number;
+  amount: number ;
+}
 export type Item = {
   id: string;
   name: string;
@@ -26,7 +34,7 @@ export type Item = {
   amount: number;
   rate: number;
   discountAmount: number;
-  itemTax: { id: string; name: string; rate: number; amount: number }[];
+  itemTax:ItemTax;
   discount: number;
 };
 export type Details = {
@@ -35,7 +43,7 @@ export type Details = {
   logo: string;
   invoiceDate: string;
   dueDate: string;
-}
+};
 export type InvoiceForm = {
   id: string;
   details: Details;
@@ -53,4 +61,5 @@ export type InvoiceForm = {
   terms: string;
   currency: string;
   attachments: string;
+  locale:string;
 };
