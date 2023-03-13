@@ -55,7 +55,9 @@ const filter = createFilterOptions<NewItem>();
 export default function InvoiceItems({ invoice }: InvoiceProps) {
   const dispatch = useAppDispatch();
   let [items, setItems] = useState<Item[]>(invoice.items);
-  console.log(items);
+  useEffect(()=>{
+    setItems(invoice.items)
+  }, [invoice])
 
   const [dialogueValue, setDialogueValue] = useState<NewItem>({
     name: '',
@@ -74,8 +76,21 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
   const [createItem, { isLoading: isCreating }] = useCreateItemMutation();
 
   //handle Add Item
-  const handleItem = () => {
-    console.log('hello');
+  const handleAddItem = () => {
+    const item: Item = {
+      id: '',
+      name: '',
+      description: '',
+      quantity: 0,
+      amount: 0,
+      rate: 0,
+      discountAmount: 0,
+      itemTax: { name: '', cgst: 0, sgst: 0, igst: 0, rate: 0, amount: 0 },
+      discount: 0,
+    };
+    const newItems = [...items, item];
+
+    dispatch(updateItems(newItems));
   };
 
   //Autocomplete Value change
@@ -110,8 +125,7 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
       };
       const newItems = [...items];
       newItems[index] = item;
-      setItems(newItems);
-      dispatch(updateItems(items));
+      dispatch(updateItems(newItems));
     }
   };
 
@@ -140,8 +154,7 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
       };
       let newItems: Item[] = [...items];
       newItems[index] = item;
-      setItems(newItems);
-      dispatch(updateItems(items));
+      dispatch(updateItems(newItems));
       setDialogueOpen(false);
     }
   };
@@ -155,13 +168,19 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
     const rate = parseFloat(value);
     const amount = newItems[index].quantity * rate;
     const discountAmount = (amount * newItems[index].discount) / 100;
-    const taxAmount = ((amount - discountAmount) * newItems[index].itemTax.igst) / 100;
-    newItems[index] = { ...newItems[index], rate, discountAmount, amount, itemTax:{
-      ...newItems[index].itemTax,
-      amount: taxAmount,
-    } };
-    setItems(newItems);
-    dispatch(updateItems(items));
+    const taxAmount =
+      ((amount - discountAmount) * newItems[index].itemTax.igst) / 100;
+    newItems[index] = {
+      ...newItems[index],
+      rate,
+      discountAmount,
+      amount,
+      itemTax: {
+        ...newItems[index].itemTax,
+        amount: taxAmount,
+      },
+    };
+    dispatch(updateItems(newItems));
   };
   //handle item quantity change
   const handleQuantityChange = (
@@ -169,12 +188,36 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
     index: number
   ) => {
     const { value } = e.target;
+    if (value === '') {
+      const newItems = [...items];
+      newItems[index] = {
+        ...newItems[index],
+        quantity: 0,
+        discountAmount: 0,
+        amount: 0,
+        itemTax: {
+          ...newItems[index].itemTax,
+          amount: 0,
+        },
+      };
+      dispatch(updateItems(newItems));
+      return;
+    }
     const newItems = [...items];
     const quantity = parseFloat(value);
-    const amount = newItems[index].rate * quantity;
-    const discountAmount = (amount * newItems[index].discount) / 100;
+    const amount =
+      Math.round((newItems[index].rate * quantity + Number.EPSILON) * 100) /
+      100;
+    const discountAmount =
+      Math.round(
+        (amount * (newItems[index].discount / 100) + Number.EPSILON) * 100
+      ) / 100;
     const taxAmount =
-      ((amount - discountAmount) * newItems[index].itemTax.igst) / 100;
+      Math.round(
+        ((amount - discountAmount) * (newItems[index].itemTax.igst / 100) +
+          Number.EPSILON) *
+          100
+      ) / 100;
     newItems[index] = {
       ...newItems[index],
       quantity,
@@ -185,8 +228,8 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
         amount: taxAmount,
       },
     };
-    setItems(newItems);
-    dispatch(updateItems(items));
+
+    dispatch(updateItems(newItems));
   };
   //handle item discount change
   const handleDiscountChange = (
@@ -194,21 +237,34 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
     index: number
   ) => {
     const { value } = e.target;
+    if (value === '') {
+      const newItems = [...items];
+      newItems[index] = { ...newItems[index], discount: 0, discountAmount: 0 };
+
+      dispatch(updateItems(newItems));
+      return;
+    }
     const newItems = [...items];
     const discount = parseFloat(value);
-    const discountAmount = (newItems[index].amount * discount) / 100;
+    const discountAmount =
+      Math.round(
+        (newItems[index].amount * (discount / 100) + Number.EPSILON) * 100
+      ) / 100;
     const taxAmount =
-      ((newItems[index].amount - discountAmount) *
-        newItems[index].itemTax.igst) /
-      100;
+      Math.round(
+        ((newItems[index].amount - discountAmount) *
+          (newItems[index].itemTax.igst / 100) +
+          Number.EPSILON) *
+          100
+      ) / 100;
     newItems[index] = {
       ...newItems[index],
       discount,
       discountAmount,
       itemTax: { ...newItems[index].itemTax, amount: taxAmount },
     };
-    setItems(newItems);
-    dispatch(updateItems(items));
+
+    dispatch(updateItems(newItems));
   };
   //handle item description change
   const handleDescriptionChange = (
@@ -229,14 +285,17 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
     const { value } = e.target;
     const newItems = [...items];
     const cgst = parseFloat(value);
+    const sgst = newItems[index].itemTax.sgst;
+    const igst = cgst + sgst;
     const amount =
-      (newItems[index].amount * newItems[index].itemTax.igst) / 100;
+      Math.round(
+        (newItems[index].amount * (igst / 100) + Number.EPSILON) * 100
+      ) / 100;
     newItems[index] = {
       ...newItems[index],
-      itemTax: { ...newItems[index].itemTax, cgst, amount },
+      itemTax: { ...newItems[index].itemTax, igst, cgst, amount },
     };
-    setItems(newItems);
-    dispatch(updateItems(items));
+    dispatch(updateItems(newItems));
   };
   //handle item SGST change
   const handleSGSTChange = (
@@ -246,36 +305,58 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
     const { value } = e.target;
     const newItems = [...items];
     const sgst = parseFloat(value);
+    const igst = newItems[index].itemTax.cgst + sgst;
     const amount =
-      (newItems[index].amount * newItems[index].itemTax.igst) / 100;
+      Math.round(
+        (newItems[index].amount * (igst / 100) + Number.EPSILON) * 100
+      ) / 100;
     newItems[index] = {
       ...newItems[index],
-      itemTax: { ...newItems[index].itemTax, sgst, amount },
+      itemTax: { ...newItems[index].itemTax,  sgst,igst, amount },
     };
-    setItems(newItems);
-    dispatch(updateItems(items));
+    dispatch(updateItems(newItems));
+
+  
   };
 
-
-  //handle item IGST change -----> Check here 
+  //handle item IGST change -----> Check here
   const handleIGSTChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => {
     const { value } = e.target;
+    if (value === '') {
+      const newItems = [...items];
+      newItems[index] = {
+        ...newItems[index],
+        itemTax: {
+          ...newItems[index].itemTax,
+          igst: 0,
+          amount: 0,
+        },
+      };
+
+      dispatch(updateItems(newItems));
+      return;
+    }
     const newItems = [...items];
     const igst = parseFloat(value);
     const amount =
-      (newItems[index].amount * newItems[index].itemTax.igst) / 100;
-
+      Math.round(
+        (newItems[index].amount * (igst / 100) + Number.EPSILON) * 100
+      ) / 100;
     newItems[index] = {
       ...newItems[index],
       itemTax: { ...newItems[index].itemTax, igst, amount },
     };
-    setItems(newItems);
-    dispatch(updateItems(items));
-    console.log(igst);
-    console.log(amount);
+    dispatch(updateItems(newItems));
+  };
+
+  //handle Delete item
+  const handleDeleteItem = (index: number): void => {
+    const newItems = [...items];
+    newItems.splice(index, 1);
+    dispatch(updateItems(newItems));
   };
 
   //Render Invoice Items
@@ -287,9 +368,7 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
           <Grid xs={1} sm={1}>
             <IconButton
               size="small"
-              onClick={() => {
-                console.log('delete');
-              }}
+              onClick={() => handleDeleteItem(index)}
               sx={{ border: 'solid 1px #6750A4', color: '#6750A4' }}
             >
               <Delete fontSize="small" />
@@ -430,7 +509,7 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Input
                   input={{
-                    id: `item-${item.discount}-discout`,
+                    id: `item-${item.name}-discout`,
                     label: `Discount %`,
                     value: `${item.discount}`,
                     type: 'number',
@@ -529,8 +608,8 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
                 {/* Change locale */}
                 <Typography variant="subtitle1">
                   {item.itemTax.amount > 0 ? '+' : ''}
-                  {item.itemTax.amount > 0 ? invoice.currency : 'Rupees'}
-                  {item.itemTax.amount > 0 ? item.itemTax.amount : 'Ruppes'}
+                  {item.itemTax.amount > 0 ? invoice.currency : ''}
+                  {item.itemTax.amount > 0 ? item.itemTax.amount : ''}
                 </Typography>
               </Box>
             </Box>
@@ -555,9 +634,7 @@ export default function InvoiceItems({ invoice }: InvoiceProps) {
       {data && renderInputs}
       <PrimaryButton
         css={{ margin: '10px 7px' }}
-        onClick={() => {
-          handleItem;
-        }}
+        onClick={handleAddItem}
         disableElevation
         startIcon={<Add />}
       >

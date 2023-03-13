@@ -19,177 +19,20 @@
   ],
   "items": [
     {
-      "name": "gugu",
-      "description": "hkjhk",
-      "rate": 30,
+      "name": "turmeric",
+      "description": "goof turemeric",
+      "rate": 100,
       "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
+        "cgst": 2.5,
+        "sgst": 2.5,
+        "igst": 5,
+        "name": "1234"
       },
       "id": 1
     },
     {
-      "name": "gugu",
-      "description": "hkjhk",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 2
-    },
-    {
-      "name": "gugu",
-      "description": "hkjhk",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 3
-    },
-    {
-      "name": "gugu",
-      "description": "hkjhk",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 4
-    },
-    {
-      "name": "gugu",
-      "description": "hkjhk",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 5
-    },
-    {
-      "name": "gugu",
-      "description": "hkjhk",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 6
-    },
-    {
-      "name": "gugu",
-      "description": "hkjhk",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 7
-    },
-    {
-      "name": "ds",
-      "description": "dsd",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 8
-    },
-    {
-      "name": "juu",
-      "description": "kk",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 9
-    },
-    {
-      "name": "guguxs",
-      "description": "dcsqcqs",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 10
-    },
-    {
-      "name": "rt",
-      "description": "rt",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 11
-    },
-   
-    {
-      "name": "rtr",
-      "description": "ret",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 13
-    },
-    {
-      "name": "sdsds",
-      "description": "dsd",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 14
-    },
-    {
-      "name": "dsd",
-      "description": "dsqdsq",
-      "rate": 30,
-      "itemTax": {
-        "cgst": 9,
-        "sgst": 9,
-        "igst": 18,
-        "name": "123"
-      },
-      "id": 15
-    },
-    {
-      "name": "sdqdqdqdq",
-      "description": "sdsqd",
+      "name": "Aata",
+      "description": "some AATA",
       "rate": 30,
       "itemTax": {
         "cgst": 2.5,
@@ -197,19 +40,19 @@
         "igst": 5,
         "name": "1234"
       },
-      "id": 16
+      "id": 2
     },
     {
-      "name": "fdf",
-      "description": "dff",
-      "rate": 30,
+      "name": "chai",
+      "description": "good chai",
+      "rate": 10000,
       "itemTax": {
         "cgst": 9,
         "sgst": 9,
         "igst": 18,
         "name": "123"
       },
-      "id": 17
+      "id": 3
     }
   ],
   "clients": [

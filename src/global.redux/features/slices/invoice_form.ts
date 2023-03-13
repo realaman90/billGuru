@@ -105,9 +105,15 @@ export const invoiceFormSlice = createSlice({
     addItem(state, action: PayloadAction<Item>) {
       state.items.push(action.payload);
     },
-    removeItem(state, action: PayloadAction<Item>) {
-      state.items = state.items.filter((item) => item.id !== action.payload.id);
-    },
+    // remove item
+    // removeItem(state, action: PayloadAction<number>)) {
+    //   const{index} = action.payload;      
+    //   state.items.splice(index, 1);
+    // },
+    // update item
+
+    
+    
     addItemTax(
       state,
       action: PayloadAction<{
@@ -196,9 +202,9 @@ export const invoiceFormSlice = createSlice({
 
     removeFee(
       state,
-      action: PayloadAction<{ name: string; amount: number; tax: number }>
+      action: PayloadAction<number>
     ) {
-      state.fee = state.fee.filter((fee) => fee.name !== action.payload.name);
+      state.fee = state.fee.splice(action.payload,1)
     },
     changeCurrency(state, action: PayloadAction<string>) {
       state.currency = action.payload;
@@ -210,7 +216,6 @@ export const {
   updateClient,
   updateSender,
   addItem,
-  removeItem,
   addItemTax,
   updateItems,
   changeCurrency,
