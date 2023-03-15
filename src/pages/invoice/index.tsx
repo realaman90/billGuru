@@ -9,7 +9,7 @@ import {
   SwipeableDrawer,
 } from '@mui/material';
 
-import { Close, Delete, Share } from '@mui/icons-material';
+import { Close, Delete, Save, Share } from '@mui/icons-material';
 import {
   InvoiceDetails,
   InvoiceClient,
@@ -20,16 +20,24 @@ import {
 } from '@/components/ui';
 import { PrimaryButton, OutlineButton } from '@/components/ui.micro/Buttons';
 import { useAppSelector } from '@/global.redux/hooks';
+import { LoadingButton } from '@mui/lab';
 
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
   marginTop:10,
 }));
+console.log(process.env.GOOGLE_CLIENT_ID);
+
+
 
 
 export default function CreateInvoice() {
+
+  
   const invoice = useAppSelector((state) => state.invoiceForm);
+  console.log(invoice);
+  
   const handlePreview = ()=>{
     //call api
     
@@ -83,7 +91,7 @@ export default function CreateInvoice() {
             <Box sx={{display:'flex', justifyContent:'flex-end', gap:'10px'}}>
                 {/* Add navigation to close and redirect user to Invoice list or back */}
                 <OutlineButton startIcon={<Close/>} >Close</OutlineButton>
-                <OutlineButton startIcon={<Delete />} > Delete</OutlineButton>
+                <OutlineButton  startIcon={<Save />} > Save</OutlineButton>
                
             </Box>
         </Grid>

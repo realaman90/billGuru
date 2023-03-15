@@ -1,14 +1,16 @@
 
 import React from 'react';
 
-import { Box, Divider, TextField, Typography } from '@mui/material';
+import { Box, Divider, IconButton, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { AttachFile } from '@mui/icons-material';
+import { AttachFile, Delete } from '@mui/icons-material';
 import dayjs from 'dayjs';
 
 import { PrimaryButton } from '../ui.micro/Buttons';
 import getLocaleDateString from '../../utils/dateformat';
 import { InvoiceForm } from '@/interfaces';
+import { removeFee } from '@/global.redux';
+import { useAppDispatch } from '@/global.redux/hooks';
 
 interface InvoiceBottomContainerProps {
   invoice: InvoiceForm;
@@ -17,6 +19,11 @@ interface InvoiceBottomContainerProps {
 export default function InvoiceBottomContainer({
   invoice,
 }: InvoiceBottomContainerProps) {
+  const dispatch = useAppDispatch();
+  const handleDeleteFee = (index: number) => () => {
+    dispatch(removeFee(index))
+  };
+
   const renderFee = (label: string) =>
     invoice.fee.map((fee: any, index: number) => {
       if (label === 'label') {
@@ -30,7 +37,10 @@ export default function InvoiceBottomContainer({
                     justifyContent: 'space-between',
                   }}
                 >
+                  <Box>
+                  <IconButton onClick={handleDeleteFee(index)}><Delete /></IconButton>  
                   <Typography>{fee.name}</Typography>
+                  </Box>
                   <Typography variant="subtitle1">
                     {invoice.currency}
                     {fee.amount}

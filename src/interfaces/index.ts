@@ -45,7 +45,8 @@ export type Details = {
   dueDate: string;
 };
 export type InvoiceForm = {
-  id: string;
+  id?: string;
+  status: string;
   details: Details;
   client: Client;
   sender: Sender;

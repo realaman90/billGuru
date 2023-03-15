@@ -10,84 +10,146 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  accounts      Account[]
+  sessions      Session[]
+  // clients       Client[]
+  // senders       Sender[]
+  // invoices      Invoice[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
-model Client {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  email          String    @unique
-  phone          String
-  address        String
-  vat            String
-  businessNumber String
-  pinCode        String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  invoices       Invoice[]
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
 }
 
-model Sender {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  email          String    @unique
-  phone          String
-  address        String
-  vat            String
-  businessNumber String
-  pinCode        String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  invoices       Invoice[]
-}
+// model Client {
+//   id             String    @id @default(auto()) @map("_id") @db.ObjectId
+//   name           String
+//   email          String    @unique
+//   phone          String
+//   address        String
+//   vat            String
+//   businessNumber String
+//   pinCode        String
+//   createdAt      DateTime  @default(now())
+//   updatedAt      DateTime  @updatedAt
+//   invoices       Invoice[]
+//   userId         String
+//   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
 
-model Item {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String
-  price       Float
-  tax         Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
+// model Sender {
+//   id             String    @id @default(auto()) @map("_id") @db.ObjectId
+//   name           String
+//   email          String    @unique
+//   phone          String
+//   address        String
+//   vat            String
+//   businessNumber String
+//   pinCode        String
+//   createdAt      DateTime  @default(now())
+//   updatedAt      DateTime  @updatedAt
+//   invoices       Invoice[]
+//   userId         String
+//   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
 
-model Invoice {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
-  number    String
-  date      DateTime
-  dueDate   DateTime
-  status    String
-  sender    Sender       @relation(fields: [senderId], references: [id])
-  senderId  String       @db.ObjectId
-  client    Client?      @relation(fields: [clientId], references: [id])
-  clientId  String?      @db.ObjectId
-  items     singleItem[]
-  total     Float 
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-}
+// model Item {
+//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+//   name        String
+//   description String
+//   price       Float
+//   tax         Int
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+// }
 
-type singleItem {
-  id String
-  name String
-  description String
-  quantity Int
-  amount Float
-  rate Float
-  discountAmount Float
-  itemTax Tax[]
-  discount Int
-}
+// model Invoice {
+//   id        String       @id @default(auto()) @map("_id") @db.ObjectId
+//   number    String
+//   details   Details
+//   status    String
+//   sender    Sender       @relation(fields: [senderId], references: [id])
+//   senderId  String       @db.ObjectId
+//   client    Client?      @relation(fields: [clientId], references: [id])
+//   clientId  String?      @db.ObjectId
+//   items     singleItem[]
+//   fees      Fee[]
+//   total     Float
+//   userId    String
+//   user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   createdAt DateTime     @default(now())
+//   updatedAt DateTime     @updatedAt
+// }
 
-type Tax {
-  id        String  
-  name      String
-  rate      Float
-  amount    Float
-}
+// type singleItem {
+//   id             String
+//   name           String
+//   description    String
+//   quantity       Float
+//   amount         Float
+//   rate           Float
+//   discountAmount Float
+//   itemTax        Tax
+//   discount       Float 
+
+// }
+
+// type Tax {
+//   id     String
+//   name   String
+//   cgst   Float?
+//   sgst   Float?
+//   igst   Float?
+//   amount Float
+// }
+
+// type Details {
+//   dueDate       String
+//   invoiceDate   String
+//   invoiceNumber String
+//   logo          String
+// }
+// type Fee {
+//   name   String
+//   tax   Float
+//   amount Float
+// }

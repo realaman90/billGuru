@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Box, Divider, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
-
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch } from '@/global.redux/hooks';
 
@@ -17,6 +16,9 @@ import { ImageUploader } from '../ui.micro/ImageUploader';
 import { updateDetails } from '../../global.redux';
 import { padding } from '@mui/system';
 import DatePickerComponent from '../ui.micro/DatePicker';
+import { generateUrl } from '@/aws/config';
+
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 interface InvoiceProps {
   invoice: InvoiceForm;
@@ -48,9 +50,8 @@ export default function InvoiceDetails({ invoice }: InvoiceProps) {
   // for date
   const handleDate = (newValue: Dayjs | null) => {
     if (newValue) {
-     
       const date = dayjs(newValue).format();
-      console.log(date)
+      console.log(date);
       dispatch(updateDetails({ ...details, invoiceDate: date }));
     }
   };
@@ -62,29 +63,17 @@ export default function InvoiceDetails({ invoice }: InvoiceProps) {
     }
   };
 
-  //for image
-  const serverCall = axios.create({
-    baseURL: 'http://localhost:5000',
-  });
-
   const handleImage = async (file: File) => {
-    try {
-      const response = await serverCall.get<{ url: string }>('/api/v1/s3Url');
-      const { url } = response.data;
+    // upload image to s3
+    const imageUploadUrl = await generateUrl();
 
-      await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        body: file,
-      });
-
-      const updatedDetails = { ...details, invoiceLogo: url.split('?')[0] };
-      dispatch(updateDetails(updatedDetails));
-    } catch (error) {
-      console.error(error);
-    }
+    await fetch(imageUploadUrl, {
+      method: 'PUT',
+      body: file,
+    });
+    const updatedDetails = { ...details, logo: imageUploadUrl.split('?')[0] };
+    dispatch(updateDetails(updatedDetails));
+   
   };
 
   return (
@@ -144,8 +133,20 @@ export default function InvoiceDetails({ invoice }: InvoiceProps) {
               size="small"
               onChange={handleInvoiceNameChange}
             />
-            <DatePickerComponent size="small" className='InvoiceDate' currValue={details.invoiceDate} handleDate={handleDate} format={'DD/MM/YYYY'} />
-            <DatePickerComponent size="small" className='invoiceDueDate' currValue={details.dueDate} handleDate={handleDueDate} format={'DD/MM/YYYY'} />
+            <DatePickerComponent
+              size="small"
+              className="InvoiceDate"
+              currValue={details.invoiceDate}
+              handleDate={handleDate}
+              format={'DD/MM/YYYY'}
+            />
+            <DatePickerComponent
+              size="small"
+              className="invoiceDueDate"
+              currValue={details.dueDate}
+              handleDate={handleDueDate}
+              format={'DD/MM/YYYY'}
+            />
           </Box>
         </Grid>
       </Grid>

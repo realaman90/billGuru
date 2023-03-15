@@ -12,7 +12,7 @@ import {
 } from '../../../interfaces/index';
 
 const Invoice = {
-  id: '',
+  status: 'unpaid',
   details: {
     invoiceName: '',
     invoiceNumber: '',
