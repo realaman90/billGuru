@@ -60,6 +60,7 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
+  newsletter    Boolean   @default(false)
   image         String?
   password      String?
   role          String?
