@@ -8,7 +8,7 @@ import Input from '@/components/ui.micro/Input';
 import { PrimaryButton } from '@/components/ui.micro/Buttons';
 import { validateForm } from '@/lib/validation';
 import GoogleButton from '@/components/ui.micro/GoogleBtn';
-import { signIn, } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -25,7 +25,6 @@ type errors = {
 };
 
 function Register() {
-
   const router = useRouter();
   // set form data
   const [userData, setUserData] = useState({
@@ -33,27 +32,23 @@ function Register() {
     email: '',
     password: '',
     confirmPassword: '',
-    newsletter: false,   
+    newsletter: false,
   });
-  const[touched, setTouched] = useState({
+  const [touched, setTouched] = useState({
     name: false,
     email: false,
     password: false,
     confirmPassword: false,
     terms: false,
-  })
-  const[terms, setTerms] = useState(true)
-
+  });
+  const [terms, setTerms] = useState(true);
 
   // set errors with type errors or null
   const [errors, setErrors] = useState<errors | null>(null);
 
-
-
   useEffect(() => {
     let formErrors = validateForm(userData, touched);
-    setErrors({...errors, ...formErrors});
-    
+    setErrors({ ...errors, ...formErrors });
   }, [userData, touched]);
 
   // handle form submit
@@ -61,7 +56,13 @@ function Register() {
     e.preventDefault();
     // validate form
     //chechk all the inputs are touched
-    if (!touched.name || !touched.email || !touched.password || !touched.confirmPassword || !touched.terms) {
+    if (
+      !touched.name ||
+      !touched.email ||
+      !touched.password ||
+      !touched.confirmPassword ||
+      !touched.terms
+    ) {
       setTouched({
         name: true,
         email: true,
@@ -71,59 +72,56 @@ function Register() {
       });
     }
     let formErrors = validateForm(userData, touched);
-   
-    setErrors({...formErrors});
-    console.log(errors)
-    
+
+    setErrors({ ...formErrors });
+    console.log(errors);
 
     // if there are no errors, submit the form
-    if (errors?.name === '' && errors?.email === '' && errors?.password === '' && errors?.confirmPassword === '' ) {
+    if (
+      errors?.name === '' &&
+      errors?.email === '' &&
+      errors?.password === '' &&
+      errors?.confirmPassword === ''
+    ) {
       // submit form
       console.log('Iam running');
       const { name, email, confirmPassword, newsletter } = userData;
-     try {
-      const res = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password: confirmPassword,
-          newsletter,
-
-        }),
-      });
-      const data = await res.json();
-      console.log(data);
-      
-      if(data.message === 'User created successfully'){
-        // login user using next-auth
-        const status =await signIn('credentials', {
-          email,
-          password: confirmPassword,
-          callbackUrl: 'http://localhost:3000/',
-      
+      try {
+        const res = await fetch('http://localhost:3000/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password: confirmPassword,
+            newsletter,
+          }),
         });
-       
+        const data = await res.json();
+        console.log(data);
 
-      }else{
-        console.log(data.message)
+        if (data.message === 'User created successfully') {
+          // call next auth login
+          signIn('credentials', {
+            email,
+            password: confirmPassword,
+            callbackUrl: 'http://localhost:3000/',
+          });
+          
+        } else {
+          console.log(data.message);
+        }
+      } catch (error) {
+        console.log(error);
       }
-      
-     } catch (error) {
-        console.log(error)
-      
-     }
     }
-
   };
   // handle google login
-  const handleGoogle = async() => {
+  const handleGoogle = async () => {
     signIn('google', { callbackUrl: 'http://localhost:3000/' });
   };
-
 
   return (
     <>
@@ -183,9 +181,9 @@ function Register() {
                   sx={{ width: '100%' }}
                   error={touched.name && errors?.name ? true : false}
                   helperText={errors?.name}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    {setUserData({ ...userData, name: e.target.value })
-                    setTouched({...touched, name: true})
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUserData({ ...userData, name: e.target.value });
+                    setTouched({ ...touched, name: true });
                   }}
                 />
 
@@ -198,10 +196,10 @@ function Register() {
                   sx={{ width: '100%', marginTop: 2 }}
                   error={errors?.email ? true : false}
                   helperText={errors?.email}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    {setUserData({ ...userData, email: e.target.value })
-                    setTouched({...touched, email: true})}
-                  }
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUserData({ ...userData, email: e.target.value });
+                    setTouched({ ...touched, email: true });
+                  }}
                 />
 
                 <Input
@@ -214,10 +212,9 @@ function Register() {
                   sx={{ width: '100%', marginTop: 2 }}
                   error={touched.password && errors?.password ? true : false}
                   helperText={errors?.password}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    {setUserData({ ...userData, password: e.target.value })
-                    setTouched({...touched, password: true})
-
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUserData({ ...userData, password: e.target.value });
+                    setTouched({ ...touched, password: true });
                   }}
                 />
 
@@ -229,15 +226,19 @@ function Register() {
                     type: 'password',
                   }}
                   sx={{ width: '100%', marginTop: 2 }}
-                  error={touched.confirmPassword && errors?.confirmPassword ? true : false}
+                  error={
+                    touched.confirmPassword && errors?.confirmPassword
+                      ? true
+                      : false
+                  }
                   helperText={errors?.confirmPassword}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    {setUserData({
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUserData({
                       ...userData,
                       confirmPassword: e.target.value,
-                    })
-                    setTouched({...touched, confirmPassword: true})}
-                  }
+                    });
+                    setTouched({ ...touched, confirmPassword: true });
+                  }}
                 />
 
                 <Box
@@ -271,7 +272,7 @@ function Register() {
                   <Checkbox
                     checked={terms}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                     setTerms (e.target.checked )
+                      setTerms(e.target.checked)
                     }
                     inputProps={{ 'aria-label': 'controlled' }}
                   />
@@ -296,7 +297,6 @@ function Register() {
                 >
                   Create Account
                 </PrimaryButton>
-
               </form>
               {/* Continue with Google */}
               <Box
@@ -317,7 +317,6 @@ function Register() {
                     height: 1,
                     justifyContent: 'center',
                     gap: 2,
-                   
                   }}
                 >
                   <Divider
@@ -327,42 +326,34 @@ function Register() {
                       height: 1,
                       backgroundColor: '#e0e0e0',
                     }}
-                    />
-                  <Typography variant="body2" >
-                  0R
-                </Typography>
-                <Divider
+                  />
+                  <Typography variant="body2">0R</Typography>
+                  <Divider
                     sx={{
                       mt: 1,
                       width: '30%',
                       height: 1,
                       backgroundColor: '#e0e0e0',
                     }}
-                    />
+                  />
                 </Box>
 
-                
                 <Box
                   sx={{
-                   
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'row',
                     gap: 2,
                     marginTop: 2,
-                    
-
                   }}
                 >
-                <GoogleButton onClick={handleGoogle} label={"CONTINUE WITH GOOGLE"} />
-                
+                  <GoogleButton
+                    onClick={handleGoogle}
+                    label={'CONTINUE WITH GOOGLE'}
+                  />
+                </Box>
               </Box>
-              </Box>
-
-
-                  
-
             </Box>
           </Box>
         </Item>

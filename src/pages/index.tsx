@@ -19,9 +19,12 @@ export default function Home() {
 let renderTemplate = <div>Nahi Chala</div>
   if (session){
      renderTemplate = 
-             <>
+
+        <>
           <Box>
-            <Typography variant='h1' >{session.user.name} chala</Typography>
+            <Typography variant='h1' > {
+              session.user.name
+            }</Typography>
           </Box>
         </>
 
