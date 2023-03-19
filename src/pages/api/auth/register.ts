@@ -15,7 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (user){
             console.log(user)
             return res.status(404).json({message:'User already exists'})}
-       else{
+            
+        if(!email || !password || !name){
+            return res.status(404).json({message:'Please fill all fields'})
+        }
         const salt = await bcrypt.genSalt(10);
         const newUser = await prisma.user.create({
             data: {
@@ -24,9 +27,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 password: await bcrypt.hash(password, salt),
                 role:'admin',
             }
-        })
-        res.status(200).json({message:'User created successfully'})
-       }
+        });
+
+        return res.status(200).json({message:'User created successfully'})
+       
 
 
     }else{

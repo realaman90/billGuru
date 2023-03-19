@@ -64,6 +64,7 @@ model User {
   image         String?
   password      String?
   role          String?
+  paymentStatus String?
   accounts      Account[]
   sessions      Session[]
   companies     Company[]

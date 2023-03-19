@@ -2,13 +2,22 @@ import React, { useEffect, useState } from 'react';
 import Link from '@mui/material/Link';
 import { useRouter } from 'next/router';
 
-import { Box, Checkbox, Divider, Paper, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Checkbox,
+  Divider,
+  Paper,
+  Snackbar,
+  Typography,
+} from '@mui/material';
 import styled from '@emotion/styled';
 import Input from '@/components/ui.micro/Input';
 import { PrimaryButton } from '@/components/ui.micro/Buttons';
 import { validateForm } from '@/lib/validation';
 import GoogleButton from '@/components/ui.micro/GoogleBtn';
 import { signIn } from 'next-auth/react';
+import { LoadingButton } from '@mui/lab';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -22,6 +31,7 @@ type errors = {
   password?: string;
   confirmPassword?: string;
   terms?: string;
+  existingUser?: string;
 };
 
 function Register() {
@@ -39,12 +49,17 @@ function Register() {
     email: false,
     password: false,
     confirmPassword: false,
-    terms: false,
   });
   const [terms, setTerms] = useState(true);
 
   // set errors with type errors or null
   const [errors, setErrors] = useState<errors | null>(null);
+
+  //toggle snackbar when user already exists
+  const [open, setOpen] = useState(false);
+
+  //set loading state
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let formErrors = validateForm(userData, touched);
@@ -55,27 +70,24 @@ function Register() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // validate form
-    //chechk all the inputs are touched
+    //check all the inputs are touched
     if (
       !touched.name ||
       !touched.email ||
       !touched.password ||
-      !touched.confirmPassword ||
-      !touched.terms
+      !touched.confirmPassword
     ) {
       setTouched({
         name: true,
         email: true,
         password: true,
         confirmPassword: true,
-        terms: true,
       });
     }
     let formErrors = validateForm(userData, touched);
 
     setErrors({ ...formErrors });
-    console.log(errors);
-
+    // console.log(errors);
     // if there are no errors, submit the form
     if (
       errors?.name === '' &&
@@ -84,7 +96,9 @@ function Register() {
       errors?.confirmPassword === ''
     ) {
       // submit form
-      console.log('Iam running');
+      setLoading(true);
+      // console.log('Iam running');
+
       const { name, email, confirmPassword, newsletter } = userData;
       try {
         const res = await fetch('http://localhost:3000/api/auth/register', {
@@ -100,18 +114,28 @@ function Register() {
           }),
         });
         const data = await res.json();
-        console.log(data);
 
         if (data.message === 'User created successfully') {
           // call next auth login
-          signIn('credentials', {
+          const res = await signIn('credentials', {
             email,
             password: confirmPassword,
-            callbackUrl: 'http://localhost:3000/',
+            redirect: false,
           });
-          
+          if (res?.status === 200) {
+            setLoading(false);
+            router.push('/dashboard');
+          } else {
+            console.log(res?.error);
+          }
+        } else if (data.message === 'User already exists') {
+          setOpen(true);
+          setLoading(false);
+          setErrors({ ...errors, existingUser: 'Email already registered' });
         } else {
-          console.log(data.message);
+          setOpen(true);
+          setLoading(false);
+          setErrors({ ...errors, existingUser: 'Please fill all values' });
         }
       } catch (error) {
         console.log(error);
@@ -120,7 +144,19 @@ function Register() {
   };
   // handle google login
   const handleGoogle = async () => {
-    signIn('google', { callbackUrl: 'http://localhost:3000/' });
+    const res = await signIn('google', {
+      callbackUrl: 'http://localhost:3000/dashboard',
+    });
+  };
+  //handle snackbar close
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
 
   return (
@@ -157,7 +193,7 @@ function Register() {
             </Typography>
 
             <Typography variant="body2" sx={{ width: '100%' }}>
-              Already have an account? <Link href="/login">Sign in</Link>
+              Already have an account? <Link href="/auth/login">Sign in</Link>
             </Typography>
 
             <Box
@@ -290,13 +326,15 @@ function Register() {
                     </Link>
                   </Typography>
                 </Box>
-                <PrimaryButton
+                <LoadingButton
                   disabled={!terms}
                   type="submit"
+                  variant="contained"
+                  loading={loading}
                   sx={{ width: '100%', marginTop: 2 }}
                 >
-                  Create Account
-                </PrimaryButton>
+                  <span>Create Account</span>
+                </LoadingButton>
               </form>
               {/* Continue with Google */}
               <Box
@@ -357,6 +395,23 @@ function Register() {
             </Box>
           </Box>
         </Item>
+        <Snackbar
+          open={open}
+          autoHideDuration={5000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{ minWidth: '340px', maxWidth: '400px' }}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="error"
+            variant="filled"
+            elevation={6}
+            sx={{ width: '100%' }}
+          >
+            {errors?.existingUser}
+          </Alert>
+        </Snackbar>
       </Box>
     </>
   );
