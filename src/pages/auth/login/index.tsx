@@ -2,13 +2,25 @@ import React, { useEffect, useState } from 'react';
 import Link from '@mui/material/Link';
 import { useRouter } from 'next/router';
 
-import { Box, Checkbox, Divider, Paper, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Checkbox,
+  Divider,
+  Paper,
+  Snackbar,
+  Typography,
+} from '@mui/material';
 import styled from '@emotion/styled';
 import Input from '@/components/ui.micro/Input';
 import { PrimaryButton } from '@/components/ui.micro/Buttons';
 import { validateForm } from '@/lib/validation';
 import GoogleButton from '@/components/ui.micro/GoogleBtn';
 import { signIn } from 'next-auth/react';
+import { LoadingButton } from '@mui/lab';
+
+// base url for api and redirect
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -19,25 +31,29 @@ const Item = styled(Paper)(({ theme }) => ({
 type errors = {
   email?: string;
   password?: string;
+  userError?: string;
 };
 
-function Register() {
+function Login() {
   const router = useRouter();
   // set form data
   const [userData, setUserData] = useState({
     email: '',
     password: '',
-   
   });
   const [touched, setTouched] = useState({
     email: false,
     password: false,
-   
   });
   const [terms, setTerms] = useState(true);
+  // set Loading state
+  const [loading, setLoading] = useState(false);
 
   // set errors with type errors or null
   const [errors, setErrors] = useState<errors | null>(null);
+
+  // When error is set, show snackbar
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let formErrors = validateForm(userData, touched);
@@ -50,47 +66,51 @@ function Register() {
     console.log('Iam running');
     // validate form
     //chechk all the inputs are touched
-    // if (
-    //   !touched.email ||
-    //   !touched.password ||
-    // ) {
-    //   setTouched({
-    //     email: true,
-    //     password: true,
-    //   });
-    // }
+    
     let formErrors = validateForm(userData, touched);
 
     setErrors({ ...formErrors });
-    console.log(errors);
+
 
     // if there are no errors, submit the form
     if (!errors?.email && !errors?.password) {
       // submit form
-      console.log('Iam running');
-      const {  email, password } = userData;
+
+        setLoading(true);
+      const { email, password } = userData;
       try {
-        console.log('Iam running');
         const status = await signIn('credentials', {
-            email,
-            password,
-            redirect: false,
-            });
-            console.log(status);
-            if (status?.status === 200) {
-                router.push('/');
-                }
-
-    
-
+          email,
+          password,
+          redirect: false,
+        });
+        console.log(status);
+        if (status?.status === 200) {
+          router.push('/dashboard');
+        } else {
+          setOpen(true);
+          setLoading(false);          
+          setErrors({ userError: 'Invalid Credentials' });
+        }
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     }
   };
   // handle google login
   const handleGoogle = async () => {
-    signIn('google', { callbackUrl: 'http://localhost:3000/' });
+    signIn('google', { callbackUrl: `${baseUrl}/dashboard` });
+  };
+  // handle snackbar close
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
 
   return (
@@ -142,7 +162,6 @@ function Register() {
               }}
             >
               <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-
                 <Input
                   input={{
                     id: 'email',
@@ -174,14 +193,15 @@ function Register() {
                   }}
                 />
 
- 
-                <PrimaryButton
+                <LoadingButton
                   disabled={!terms}
+                  loading={loading}
+                  variant="contained"
                   type="submit"
                   sx={{ width: '100%', marginTop: 2 }}
                 >
                   Login
-                </PrimaryButton>
+                </LoadingButton>
               </form>
               {/* Continue with Google */}
               <Box
@@ -242,9 +262,26 @@ function Register() {
             </Box>
           </Box>
         </Item>
+        <Snackbar
+          open={open}
+          autoHideDuration={5000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{ minWidth: '340px', maxWidth: '400px' }}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="error"
+            variant="filled"
+            elevation={6}
+            sx={{ width: '100%' }}
+          >
+            {errors?.userError}
+          </Alert>
+        </Snackbar>
       </Box>
     </>
   );
 }
 
-export default Register;
+export default Login;

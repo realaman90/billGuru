@@ -16,8 +16,9 @@ import Input from '@/components/ui.micro/Input';
 import { PrimaryButton } from '@/components/ui.micro/Buttons';
 import { validateForm } from '@/lib/validation';
 import GoogleButton from '@/components/ui.micro/GoogleBtn';
-import { signIn } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 import { LoadingButton } from '@mui/lab';
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -33,6 +34,7 @@ type errors = {
   terms?: string;
   existingUser?: string;
 };
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 function Register() {
   const router = useRouter();
@@ -101,7 +103,7 @@ function Register() {
 
       const { name, email, confirmPassword, newsletter } = userData;
       try {
-        const res = await fetch('http://localhost:3000/api/auth/register', {
+        const res = await fetch(`${baseUrl}/api/auth/register`, {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',
@@ -122,8 +124,7 @@ function Register() {
             password: confirmPassword,
             redirect: false,
           });
-          if (res?.status === 200) {
-            setLoading(false);
+          if (res?.status === 200) {            
             router.push('/dashboard');
           } else {
             console.log(res?.error);
@@ -145,7 +146,7 @@ function Register() {
   // handle google login
   const handleGoogle = async () => {
     const res = await signIn('google', {
-      callbackUrl: 'http://localhost:3000/dashboard',
+      callbackUrl: `${baseUrl}/dashboard`,
     });
   };
   //handle snackbar close
