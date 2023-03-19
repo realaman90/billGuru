@@ -23,7 +23,7 @@ let renderTemplate = <div>Nahi Chala</div>
         <>
           <Box>
             <Typography variant='h1' > {
-              session.user.name
+              'test'
             }</Typography>
           </Box>
         </>
