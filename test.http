@@ -3,6 +3,22 @@ POST http://localhost:3000/api/auth/register
 Content-type: application/json
 
 {
-    "email": "aman2.rawat@gmail.com",
-    "password": "test"
+    "email": "amanrawatamg2@gmail.com",
+    "password": "Sndkraa75%",
+    "name": "Aman Rawat"
 }
+
+## create company
+
+POST http://localhost:3000/api/admin/company
+Content-type: application/json
+{
+    "name": "Aman Rawat",
+    "companyEmail": "test@test.com",
+    "phone": "1234567890",
+    "address": "test address",
+    "pinCode": "123456",
+    "vat": "1234567890",
+    "businessNumber": "1234567890",
+    "phone":"1234567890"
+ }
