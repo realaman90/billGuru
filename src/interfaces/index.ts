@@ -55,7 +55,7 @@ export type InvoiceForm = {
   totalTax: number;
   totalDiscount: number;
   total: number;
-  payments: { id: string; name: string; amount: number; date: string }[];
+  payments: { name: string; amount: number; date: string; notes:string; method:string}[];
   fee: { name: string; amount: number; tax: number }[];
   balanceDue: number;
   notes: string;
@@ -70,3 +70,10 @@ export interface User {
   userName?: string;
   accessToken?: string;
 }
+export type Fee ={
+  name?: string;
+  amount?: number;
+  tax?: number;
+
+}
+

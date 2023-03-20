@@ -51,6 +51,7 @@ model Company {
   clients        Client[]
   senders        Sender[]
   invoices       Invoice[]
+  items          Item[]
   userId         String
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -106,7 +107,6 @@ model Sender {
   pinCode        String
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  invoices       Invoice[]
   companyId      String
   company        Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
@@ -116,27 +116,39 @@ model Item {
   name        String
   description String
   price       Float
-  tax         Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  tax         Int?
+  hsnCodeId   String
+  hsnCode     hsnCodes @relation(fields: [hsnCodeId], references: [id])
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Invoice {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
-  number    String
-  details   Details
-  status    String
-  sender    Sender       @relation(fields: [senderId], references: [id])
-  senderId  String       @db.ObjectId
-  client    Client?      @relation(fields: [clientId], references: [id])
-  clientId  String?      @db.ObjectId
-  items     singleItem[]
-  fees      Fee[]
-  total     Float
-  companyId String
-  company   Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  details       Details
+  status        String
+  client        Client?      @relation(fields: [clientId], references: [id])
+  clientId      String?      @db.ObjectId
+  items         singleItem[]
+  fees          Fee[]
+  subtotal      Float
+  totalTax      Float
+  totalDiscount Float
+  total         Float
+  balanceDue    Float
+  notes         String?
+  terms         String?
+  currency      String
+  attachments   String[]    @default([])
+  locale        String?
+  payments      Payment[]
+  companyId     String
+  company       Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model hsnCodes {
@@ -145,9 +157,10 @@ model hsnCodes {
   sno         String?
   chapter     String?
   description String?
-  cgst        Float
-  sgst        Float
-  igst        Float
+  cgst        Float?
+  sgst        Float?
+  igst        Float?
+  items       Item[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -165,12 +178,13 @@ type singleItem {
 }
 
 type Tax {
-  id     String
+
   name   String
   cgst   Float?
   sgst   Float?
   igst   Float?
-  amount Float
+  rate   Float?
+  amount Float?
 }
 
 type Details {
@@ -181,7 +195,15 @@ type Details {
 }
 
 type Fee {
-  name   String
-  tax    Float
-  amount Float
+  name   String?
+  tax    Float?
+  amount Float?
+}
+
+type Payment {
+  name   String?
+  amount Float?
+  date   String?
+  notes  String?
+  method String?
 }

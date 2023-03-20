@@ -60,10 +60,13 @@ const Invoice = {
   fee: [{ name: '', amount: 0, tax: 0 }],
   payments: [
     {
-      id: '',
+      
       name: '',
       amount: 0,
       date: dayjs().format('YYYY-MM-DD'),
+      method: '',
+      notes: '',
+      
     },
   ],
   balanceDue: 0,
